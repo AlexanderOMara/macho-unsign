@@ -139,7 +139,6 @@ function unsignThin(data: Readonly<ArrayBuffers | IArrayBufferView>) {
 
 	let bits = 0;
 	let le = false;
-	let align = 0;
 
 	// Read helpers.
 	const rU32 = (offset: number) => dv.getUint32(offset, le);
@@ -157,23 +156,19 @@ function unsignThin(data: Readonly<ArrayBuffers | IArrayBufferView>) {
 	switch (magic) {
 		case 0xFEEDFACE: {
 			bits = 32;
-			align = 4;
 			break;
 		}
 		case 0xCEFAEDFE: {
 			bits = 32;
-			align = 4;
 			le = true;
 			break;
 		}
 		case 0xFEEDFACF: {
 			bits = 64;
-			align = 8;
 			break;
 		}
 		case 0xCFFAEDFE: {
 			bits = 64;
-			align = 8;
 			le = true;
 			break;
 		}
@@ -325,7 +320,7 @@ function unsignThin(data: Readonly<ArrayBuffers | IArrayBufferView>) {
 		);
 	}
 	const padSize = csDataOffset - end;
-	if ((csDataOffset - end) > align) {
+	if ((csDataOffset - end) >= 16) {
 		throw new Error(
 			`Unexpected amount of padding before signature start: ${padSize}`
 		);
