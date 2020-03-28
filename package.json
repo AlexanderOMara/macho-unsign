@@ -30,7 +30,7 @@
 	"repository": "https://github.com/AlexanderOMara/macho-unsign.git",
 	"bugs": "https://github.com/AlexanderOMara/macho-unsign/issues",
 	"author": "Alexander O'Mara",
-	"copyright": "Copyright (c) 2019 Alexander O'Mara",
+	"copyright": "Copyright (c) 2019-2020 Alexander O'Mara",
 	"license": "MPL-2.0",
 	"devDependencies": {
 		"@babel/core": "^7.9.0",
