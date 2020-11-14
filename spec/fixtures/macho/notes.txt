@@ -1,11 +1,14 @@
 Ran on 10.6.8 with Xcode 3.2.6:
-./build-1-notsigned.sh
-./build-2-signed.sh
+./build-1-notsigned-ppc-intel.sh
+./build-2-signed-ppc-intel.sh
 
-Ran on 10.14.6:
+Ran on 10.15.7 with Command Line Tools for Xcode 12.2:
+./build-1-notsigned-arm.sh
+./build-2-signed.sh
 ./build-3-unsigned.sh
 ./build-4-fat.sh
 
 The older codesign fails to unsign binaries properly.
 Must use a newer version for that step.
 Removal does not update __LINKEDIT VM Size property, otherwise identical to notsigned.
+Apple Silicon ARM binaries always have a signature when created.

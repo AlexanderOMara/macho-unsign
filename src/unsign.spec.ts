@@ -23,7 +23,8 @@ const archs = [
 	'ppc64',
 	'ppc970',
 	'i386',
-	'x86_64'
+	'x86_64',
+	'arm64'
 ];
 
 function * genSamples() {
