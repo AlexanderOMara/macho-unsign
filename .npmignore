@@ -20,12 +20,12 @@ yarn.lock
 /package-lock.json
 /.gitattributes
 /.gitignore
+/.github
 /.babelrc
 /.editorconfig
 /.eslintignore
 /.eslintrc.yaml
 /.tern-project
-/.travis.yml
 /tsconfig.json
 /tsconfig.eslint.json
 /gulpfile.babel.js
