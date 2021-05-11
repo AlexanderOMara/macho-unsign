@@ -26,10 +26,9 @@ yarn.lock
 /.editorconfig
 /.eslintignore
 /.eslintrc.yaml
-/.tern-project
 /tsconfig.json
 /tsconfig.eslint.json
-/gulpfile.babel.js
+/gulpfile.babel.ts
 /spec
 /src
 
