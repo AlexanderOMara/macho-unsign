@@ -16,14 +16,11 @@ import del from 'del';
 const readFile = util.promisify(fs.readFile);
 const pipeline = util.promisify(stream.pipeline);
 
-function command(cmd: string, args: string[] = []) {
-	return async (throws = true) => {
-		const p = execa(cmd, args, {
-			preferLocal: true,
-			stdio: 'inherit'
-		});
-		await (throws ? p : p.catch(_ => null));
-	};
+async function exec(cmd: string, args: string[] = []) {
+	await execa(cmd, args, {
+		preferLocal: true,
+		stdio: 'inherit'
+	});
 }
 
 async function packageJSON() {
@@ -104,10 +101,6 @@ async function babelTarget(
 	);
 }
 
-const eslint = command('eslint', ['.']);
-const jasmine = command('jasmine');
-const tsc = command('tsc');
-
 // clean
 
 gulp.task('clean:logs', async () => {
@@ -132,7 +125,7 @@ gulp.task('clean', gulp.parallel([
 // lint
 
 gulp.task('lint:es', async () => {
-	await eslint();
+	await exec('eslint', ['.']);
 });
 
 gulp.task('lint', gulp.parallel([
@@ -142,7 +135,7 @@ gulp.task('lint', gulp.parallel([
 // build
 
 gulp.task('build:lib:dts', async () => {
-	await tsc();
+	await exec('tsc');
 });
 
 gulp.task('build:lib:cjs', async () => {
@@ -166,7 +159,7 @@ gulp.task('build', gulp.parallel([
 // test
 
 gulp.task('test:node', async () => {
-	await jasmine();
+	await exec('jasmine');
 });
 
 gulp.task('test', gulp.parallel([
