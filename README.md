@@ -51,7 +51,7 @@ If you find a bug or have compatibility issues, please open a ticket under issue
 
 # License
 
-Copyright (c) 2019-2021 Alexander O'Mara
+Copyright (c) 2019-2022 Alexander O'Mara
 
 Licensed under the Mozilla Public License, v. 2.0.
 
