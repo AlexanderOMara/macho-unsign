@@ -9,6 +9,7 @@ jobs:
         config:
           - node-version: '10.0.0'
             NO_LINT: 1
+            NO_NPM_CI: 1
 
           - node-version: '10.24.1' # LTS
             NO_LINT: 1
@@ -40,6 +41,11 @@ jobs:
 
       - name: Dependencies
         run: npm ci
+        if: matrix.config.NO_NPM_CI != 1
+
+      - name: Dependencies
+        run: npm install
+        if: matrix.config.NO_NPM_CI == 1
 
       - name: Build
         run: npm run build
