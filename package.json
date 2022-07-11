@@ -56,13 +56,13 @@
 		"@types/gulp-sourcemaps": "0.0.34",
 		"@types/jasmine": "^3.7.2",
 		"@types/node": "^15.0.2",
-		"@typescript-eslint/eslint-plugin": "^4.23.0",
-		"@typescript-eslint/parser": "^4.23.0",
+		"@typescript-eslint/eslint-plugin": "^5.30.5",
+		"@typescript-eslint/parser": "^5.30.5",
 		"babel-plugin-esm-resolver": "^2.3.0",
 		"del": "^6.1.1",
-		"eslint": "^7.26.0",
-		"eslint-plugin-import": "^2.22.1",
-		"eslint-plugin-jsdoc": "^34.0.0",
+		"eslint": "^8.19.0",
+		"eslint-plugin-import": "^2.26.0",
+		"eslint-plugin-jsdoc": "^39.3.3",
 		"execa": "^5.1.1",
 		"gulp": "^4.0.2",
 		"gulp-babel": "^8.0.0",
@@ -75,6 +75,6 @@
 		"jasmine-core": "^3.7.1",
 		"jasmine-spec-reporter": "^7.0.0",
 		"source-map-support": "^0.5.21",
-		"typescript": "^4.2.4"
+		"typescript": "^4.7.4"
 	}
 }
