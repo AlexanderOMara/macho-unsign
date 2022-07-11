@@ -174,16 +174,16 @@ gulp.task('test', gulp.series(['test:cjs', 'test:esm']));
 
 // watch
 
-gulp.task('watch', () => {
-	gulp.watch(['src/**/*'], gulp.series(['all']));
-});
-
 gulp.task('watch:cjs', () => {
 	gulp.watch(['src/**/*'], gulp.series(['all:cjs']));
 });
 
 gulp.task('watch:esm', () => {
 	gulp.watch(['src/**/*'], gulp.series(['all:esm']));
+});
+
+gulp.task('watch', () => {
+	gulp.watch(['src/**/*'], gulp.series(['all']));
 });
 
 // all
