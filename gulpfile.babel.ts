@@ -19,7 +19,8 @@ const pipeline = util.promisify(stream.pipeline);
 async function exec(cmd: string, args: string[] = []) {
 	const code = await new Promise<number | null>((resolve, reject) => {
 		const p = childProcess.spawn(cmd, args, {
-			stdio: 'inherit'
+			stdio: 'inherit',
+			shell: true
 		});
 		p.once('close', resolve);
 		p.once('error', reject);
@@ -162,11 +163,11 @@ gulp.task('build', gulp.parallel(['build:dts', 'build:cjs', 'build:esm']));
 // test
 
 gulp.task('test:cjs', async () => {
-	await exec('npx', ['jasmine']);
+	await exec('jasmine');
 });
 
 gulp.task('test:esm', async () => {
-	await exec('npx', ['jasmine', '--config=spec/support/jasmine.esm.json']);
+	await exec('jasmine', ['--config=spec/support/jasmine.esm.json']);
 });
 
 gulp.task('test', gulp.series(['test:cjs', 'test:esm']));
