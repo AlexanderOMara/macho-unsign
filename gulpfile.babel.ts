@@ -166,11 +166,11 @@ gulp.task('build', gulp.parallel(['build:dts', 'build:cjs', 'build:esm']));
 // test
 
 gulp.task('test:cjs', async () => {
-	await exec('jasmine');
+	await exec('npx', ['jasmine']);
 });
 
 gulp.task('test:esm', async () => {
-	await exec('jasmine', ['--config=spec/support/jasmine.esm.json']);
+	await exec('npx', ['jasmine', '--config=spec/support/jasmine.esm.json']);
 });
 
 gulp.task('test', gulp.series(['test:cjs', 'test:esm']));
