@@ -1,4 +1,4 @@
-# macho-unsign
+# Mach-O Unsign
 
 Package for removing Mach-O code signatures
 
@@ -12,7 +12,7 @@ Package for removing Mach-O code signatures
 
 # Overview
 
-A broken code signature is worse than no signature, so it can be desirable to remove a signature.
+A broken code signature is often worse than no signature, so it can be desirable to remove a signature.
 
 This package can remove code signatures from Mach-O binaries.
 
