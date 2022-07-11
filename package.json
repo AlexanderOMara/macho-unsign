@@ -63,7 +63,7 @@
 		"eslint": "^7.26.0",
 		"eslint-plugin-import": "^2.22.1",
 		"eslint-plugin-jsdoc": "^34.0.0",
-		"execa": "^6.1.0",
+		"execa": "^5.1.1",
 		"gulp": "^4.0.2",
 		"gulp-babel": "^8.0.0",
 		"gulp-filter": "^7.0.0",
