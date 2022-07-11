@@ -21,12 +21,8 @@ async function exec(cmd: string, args: string[] = []) {
 		const p = childProcess.spawn(cmd, args, {
 			stdio: 'inherit'
 		});
-		p.once('close', code => {
-			resolve(code);
-		});
-		p.once('error', err => {
-			reject(err);
-		});
+		p.once('close', resolve);
+		p.once('error', reject);
 	});
 	if (code) {
 		throw new Error(`Exit code: ${code}`);
