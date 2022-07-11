@@ -10,7 +10,6 @@ Package for removing Mach-O code signatures
 
 [![Build Status](https://github.com/AlexanderOMara/macho-unsign/workflows/main/badge.svg?branch=master)](https://github.com/AlexanderOMara/macho-unsign/actions?query=workflow%3Amain+branch%3Amaster)
 
-
 # Overview
 
 A broken code signature is worse than no signature, so it can be desirable to remove a signature.
@@ -18,7 +17,6 @@ A broken code signature is worse than no signature, so it can be desirable to re
 This package can remove code signatures from Mach-O binaries.
 
 Both thin and fat binaries are supported.
-
 
 # Usage
 
@@ -36,17 +34,14 @@ const unsigned = unsign(fs.readFileSync('macho-binary'));
 if (unsigned) {
 	console.log('Signature Removed', unsigned);
 	fs.writeFileSync('macho-binary-unsigned', Buffer.from(unsigned));
-}
-else {
+} else {
 	console.log('Not signed');
 }
 ```
 
-
 # Bugs
 
 If you find a bug or have compatibility issues, please open a ticket under issues section for this repository.
-
 
 # License
 

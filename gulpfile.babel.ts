@@ -17,7 +17,7 @@ const readFile = util.promisify(fs.readFile);
 const pipeline = util.promisify(stream.pipeline);
 
 async function exec(cmd: string, args: string[] = []) {
-	const code = await new Promise((resolve, reject) => {
+	const code = await new Promise<number | null>((resolve, reject) => {
 		const p = childProcess.spawn(cmd, args, {
 			stdio: 'inherit'
 		});
@@ -34,13 +34,19 @@ async function exec(cmd: string, args: string[] = []) {
 }
 
 async function packageJSON() {
-	return JSON.parse(await readFile('package.json', 'utf8'));
+	return JSON.parse(await readFile('package.json', 'utf8')) as {
+		[p: string]: string;
+	};
 }
 
 async function babelrc() {
 	return {
 		...JSON.parse(await readFile('.babelrc', 'utf8')),
 		babelrc: false
+	} as {
+		presets: [string, unknown][];
+		babelOpts: unknown[];
+		plugins: unknown[];
 	};
 }
 
@@ -53,12 +59,13 @@ async function babelTarget(
 	const babelOptions = await babelrc();
 	for (const preset of babelOptions.presets) {
 		if (preset[0] === '@babel/preset-env') {
-			preset[1].modules = modules;
+			(preset[1] as {modules: string | boolean}).modules = modules;
 		}
 	}
 	if (!modules) {
 		babelOptions.plugins.push([
-			'esm-resolver', {
+			'esm-resolver',
+			{
 				source: {
 					extensions: [
 						[
@@ -87,7 +94,7 @@ async function babelTarget(
 		...filterMetaReplaces,
 		filterMeta.restore,
 		gulpSourcemaps.init(),
-		gulpBabel(babelOptions),
+		gulpBabel(babelOptions as {}),
 		gulpRename(path => {
 			if (!modules && path.extname === '.js') {
 				path.extname = '.mjs';
@@ -113,23 +120,14 @@ async function babelTarget(
 // clean
 
 gulp.task('clean:logs', async () => {
-	await del([
-		'npm-debug.log*',
-		'yarn-debug.log*',
-		'yarn-error.log*'
-	]);
+	await del(['npm-debug.log*', 'yarn-debug.log*', 'yarn-error.log*']);
 });
 
 gulp.task('clean:lib', async () => {
-	await del([
-		'lib'
-	]);
+	await del(['lib']);
 });
 
-gulp.task('clean', gulp.parallel([
-	'clean:logs',
-	'clean:lib'
-]));
+gulp.task('clean', gulp.parallel(['clean:logs', 'clean:lib']));
 
 // lint
 
@@ -137,9 +135,17 @@ gulp.task('lint:es', async () => {
 	await exec('eslint', ['.']);
 });
 
-gulp.task('lint', gulp.parallel([
-	'lint:es'
-]));
+gulp.task('lint', gulp.parallel(['lint:es']));
+
+// formatting
+
+gulp.task('format', async () => {
+	await exec('prettier', ['-w', '.']);
+});
+
+gulp.task('formatted', async () => {
+	await exec('prettier', ['-c', '.']);
+});
 
 // build
 
@@ -155,11 +161,7 @@ gulp.task('build:esm', async () => {
 	await babelTarget(['src/**/*.ts'], 'lib', false);
 });
 
-gulp.task('build', gulp.parallel([
-	'build:dts',
-	'build:cjs',
-	'build:esm'
-]));
+gulp.task('build', gulp.parallel(['build:dts', 'build:cjs', 'build:esm']));
 
 // test
 
@@ -176,61 +178,35 @@ gulp.task('test', gulp.series(['test:cjs', 'test:esm']));
 // watch
 
 gulp.task('watch', () => {
-	gulp.watch([
-		'src/**/*'
-	], gulp.series([
-		'all'
-	]));
+	gulp.watch(['src/**/*'], gulp.series(['all']));
 });
 
 gulp.task('watch:cjs', () => {
-	gulp.watch([
-		'src/**/*'
-	], gulp.series([
-		'all:cjs'
-	]));
+	gulp.watch(['src/**/*'], gulp.series(['all:cjs']));
 });
 
 gulp.task('watch:esm', () => {
-	gulp.watch([
-		'src/**/*'
-	], gulp.series([
-		'all:esm'
-	]));
+	gulp.watch(['src/**/*'], gulp.series(['all:esm']));
 });
 
 // all
 
-gulp.task('all:cjs', gulp.series([
-	'clean',
-	'build:cjs',
-	'test:cjs',
-	'lint'
-]));
+gulp.task(
+	'all:cjs',
+	gulp.series(['clean', 'build:cjs', 'test:cjs', 'lint', 'formatted'])
+);
 
-gulp.task('all:esm', gulp.series([
-	'clean',
-	'build:esm',
-	'test:esm',
-	'lint'
-]));
+gulp.task(
+	'all:esm',
+	gulp.series(['clean', 'build:esm', 'test:esm', 'lint', 'formatted'])
+);
 
-gulp.task('all', gulp.series([
-	'clean',
-	'build',
-	'test',
-	'lint'
-]));
+gulp.task('all', gulp.series(['clean', 'build', 'test', 'lint', 'formatted']));
 
 // prepack
 
-gulp.task('prepack', gulp.series([
-	'clean',
-	'build'
-]));
+gulp.task('prepack', gulp.series(['clean', 'build']));
 
 // default
 
-gulp.task('default', gulp.series([
-	'all'
-]));
+gulp.task('default', gulp.series(['all']));

@@ -1,19 +1,16 @@
-import {
-	ArrayBuffers,
-	IArrayBufferView
-} from './types';
+import {ArrayBuffers, IArrayBufferView} from './types';
 
 const LC_SEGMENT = 0x01;
 const LC_SEGMENT_64 = 0x19;
 const LC_DYLD_INFO = 0x22;
 const LC_DYLD_INFO_ONLY = 0x80000022;
 const LC_SYMTAB = 0x02;
-const LC_DYSYMTAB = 0x0B;
+const LC_DYSYMTAB = 0x0b;
 const LC_FUNCTION_STARTS = 0x26;
 const LC_DATA_IN_CODE = 0x29;
 const ENCRYPTION_INFO = 0x21;
-const ENCRYPTION_INFO_64 = 0x2C;
-const LC_CODE_SIGNATURE = 0x1D;
+const ENCRYPTION_INFO_64 = 0x2c;
+const LC_CODE_SIGNATURE = 0x1d;
 
 /**
  * Encode address for display.
@@ -39,14 +36,15 @@ function dataAsDataView(data: Readonly<ArrayBuffers | IArrayBufferView>) {
 	if (buffer) {
 		size = bufferView.byteLength;
 		offset = bufferView.byteOffset;
-	}
-	else {
+	} else {
 		buffer = data as ArrayBuffers;
 		size = buffer.byteLength;
 		offset = 0;
 	}
-	return (
-		new DataView(buffer as ArrayBuffers, offset, size)
+	return new DataView(
+		buffer as ArrayBuffers,
+		offset,
+		size
 	) as Readonly<DataView>;
 }
 
@@ -111,15 +109,14 @@ function dataViewConcat(
 	total: number | null = null
 ) {
 	// Calculate size if necessary.
-	const size = total === null ?
-		dvs.reduce((a, b) => a + b.byteLength, 0) :
-		total;
+	const size =
+		total === null ? dvs.reduce((a, b) => a + b.byteLength, 0) : total;
 
 	// Write all the data to one array buffer.
 	const concat = new ArrayBuffer(size);
 	let offset = 0;
 	for (const {buffer, byteOffset, byteLength} of dvs) {
-		(new Uint8Array(concat, offset, byteLength)).set(
+		new Uint8Array(concat, offset, byteLength).set(
 			new Uint8Array(buffer, byteOffset, byteLength),
 			0
 		);
@@ -140,11 +137,23 @@ function unsignThin(data: Readonly<ArrayBuffers | IArrayBufferView>) {
 	let bits = 0;
 	let le = false;
 
-	// Read helpers.
+	/**
+	 * UINT32 read helper.
+	 *
+	 * @param offset File offset.
+	 * @returns UINT32 integer.
+	 */
 	const rU32 = (offset: number) => dv.getUint32(offset, le);
+
+	/**
+	 * UINT64 read helper.
+	 *
+	 * @param offset File offset.
+	 * @returns UINT64 integer.
+	 */
 	const rU64 = (offset: number) => {
-		const h = rU32(le ? (offset + 4) : offset);
-		const l = rU32(le ? offset : (offset + 4));
+		const h = rU32(le ? offset + 4 : offset);
+		const l = rU32(le ? offset : offset + 4);
 		if (h > 0) {
 			throw new Error('Integer is too large');
 		}
@@ -154,20 +163,20 @@ function unsignThin(data: Readonly<ArrayBuffers | IArrayBufferView>) {
 	// Detect header.
 	const magic = rU32(0);
 	switch (magic) {
-		case 0xFEEDFACE: {
+		case 0xfeedface: {
 			bits = 32;
 			break;
 		}
-		case 0xCEFAEDFE: {
+		case 0xcefaedfe: {
 			bits = 32;
 			le = true;
 			break;
 		}
-		case 0xFEEDFACF: {
+		case 0xfeedfacf: {
 			bits = 64;
 			break;
 		}
-		case 0xCFFAEDFE: {
+		case 0xcffaedfe: {
 			bits = 64;
 			le = true;
 			break;
@@ -193,6 +202,12 @@ function unsignThin(data: Readonly<ArrayBuffers | IArrayBufferView>) {
 
 	// A variable for where tha Mach-O should end.
 	let end = 0;
+
+	/**
+	 * Update the far offset.
+	 *
+	 * @param offset Current offset.
+	 */
 	const far = (offset: number) => {
 		if (offset > end) {
 			end = offset;
@@ -265,7 +280,7 @@ function unsignThin(data: Readonly<ArrayBuffers | IArrayBufferView>) {
 			}
 			case LC_SYMTAB: {
 				// Symbol table offset and symbol count, 12 bytes each.
-				far(rU32(offset + 8) + (rU32(offset + 12) * 12));
+				far(rU32(offset + 8) + rU32(offset + 12) * 12);
 				// String table offset and size.
 				far(rU32(offset + 16) + rU32(offset + 20));
 				break;
@@ -273,7 +288,7 @@ function unsignThin(data: Readonly<ArrayBuffers | IArrayBufferView>) {
 			case LC_DYSYMTAB: {
 				// Are the other tables ever used? If so how large are entries?
 				// IndSym offset and entry count, 4 bytes each.
-				far(rU32(offset + 56) + (rU32(offset + 60) * 4));
+				far(rU32(offset + 56) + rU32(offset + 60) * 4);
 				break;
 			}
 			case LC_FUNCTION_STARTS:
@@ -320,7 +335,7 @@ function unsignThin(data: Readonly<ArrayBuffers | IArrayBufferView>) {
 		);
 	}
 	const padSize = csDataOffset - end;
-	if ((csDataOffset - end) >= 16) {
+	if (csDataOffset - end >= 16) {
 		throw new Error(
 			`Unexpected amount of padding before signature start: ${padSize}`
 		);
@@ -332,10 +347,22 @@ function unsignThin(data: Readonly<ArrayBuffers | IArrayBufferView>) {
 	// Copy data, trimming off code signature and padding before it.
 	const unsigned = new DataView(dataViewCopy(dv, 0, end));
 
-	// Write helpers.
+	/**
+	 * UINT32 write helper.
+	 *
+	 * @param value UINT32 integer.
+	 * @param offset File offset.
+	 */
 	const wU32 = (value: number, offset: number) => {
 		unsigned.setUint32(offset, value, le);
 	};
+
+	/**
+	 * UINT64 write helper.
+	 *
+	 * @param value UINT64 integer.
+	 * @param offset File offset.
+	 */
 	const wU64 = (value: number, offset: number) => {
 		wU32(le ? value : 0, offset);
 		wU32(le ? 0 : value, offset + 4);
@@ -370,6 +397,13 @@ function unsignThin(data: Readonly<ArrayBuffers | IArrayBufferView>) {
  */
 function unsignFat(data: Readonly<ArrayBuffers | IArrayBufferView>) {
 	const dv = dataAsDataView(data);
+
+	/**
+	 * UINT32 read helper.
+	 *
+	 * @param offset File offset.
+	 * @returns UINT32 integer.
+	 */
 	const rU32 = (offset: number) => dv.getUint32(offset, false);
 
 	// Binaries to be joined in new fat binary.
@@ -398,9 +432,9 @@ function unsignFat(data: Readonly<ArrayBuffers | IArrayBufferView>) {
 		if (maybeUnsigned) {
 			didUnsign = true;
 		}
-		const unsigned = maybeUnsigned ?
-			dataAsDataView(maybeUnsigned) :
-			maybeSigned;
+		const unsigned = maybeUnsigned
+			? dataAsDataView(maybeUnsigned)
+			: maybeSigned;
 
 		// Add to the list.
 		pieces.push({
@@ -422,8 +456,15 @@ function unsignFat(data: Readonly<ArrayBuffers | IArrayBufferView>) {
 	const concat: Readonly<DataView>[] = [];
 
 	// Create header.
-	const headerSize = 8 + (archs * 20);
+	const headerSize = 8 + archs * 20;
 	const header = new DataView(new ArrayBuffer(headerSize));
+
+	/**
+	 * UINT32 write helper.
+	 *
+	 * @param value UINT32 integer.
+	 * @param offset File offset.
+	 */
 	const wU32 = (value: number, offset: number) => {
 		header.setUint32(offset, value, false);
 	};
@@ -481,7 +522,7 @@ function unsignFat(data: Readonly<ArrayBuffers | IArrayBufferView>) {
  * @returns Mach-O data unsigned or null if no signature removed.
  */
 export function unsign(data: Readonly<ArrayBuffers | IArrayBufferView>) {
-	if (dataAsDataView(data).getUint32(0, false) === 0xCAFEBABE) {
+	if (dataAsDataView(data).getUint32(0, false) === 0xcafebabe) {
 		return unsignFat(data);
 	}
 	return unsignThin(data);

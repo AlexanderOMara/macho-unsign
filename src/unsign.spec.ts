@@ -1,33 +1,16 @@
-import {
-	readFile
-} from 'fs';
-import {
-	promisify
-} from 'util';
-import {
-	createHash
-} from 'crypto';
+import {readFile} from 'fs';
+import {promisify} from 'util';
+import {createHash} from 'crypto';
 
 const readFileP = promisify(readFile);
 
-import {
-	unsign
-} from './unsign';
+import {unsign} from './unsign';
 
-const samples = [
-	'main'
-];
+const samples = ['main'];
 
-const archs = [
-	'ppc',
-	'ppc64',
-	'ppc970',
-	'i386',
-	'x86_64',
-	'arm64'
-];
+const archs = ['ppc', 'ppc64', 'ppc970', 'i386', 'x86_64', 'arm64'];
 
-function * genSamples() {
+function* genSamples() {
 	for (const sample of samples) {
 		for (const arch of archs) {
 			yield `${sample}.${arch}.slim`;
@@ -54,9 +37,7 @@ async function readSampleUnsigned(name: string) {
 }
 
 function sha256(data: Buffer) {
-	return createHash('sha256')
-		.update(data)
-		.digest('hex');
+	return createHash('sha256').update(data).digest('hex');
 }
 
 function ensureUnchanged(data: Buffer) {
@@ -72,6 +53,7 @@ function ensureUnchanged(data: Buffer) {
 describe('unsign', () => {
 	describe('unsign', () => {
 		for (const sample of genSamples()) {
+			// eslint-disable-next-line no-loop-func
 			it(sample, async () => {
 				const signed = await readSampleSigned(sample);
 				const notsigned = await readSampleNotsigned(sample);
@@ -82,8 +64,7 @@ describe('unsign', () => {
 				if (signedUnsigned) {
 					const signedUnsignedB = Buffer.from(signedUnsigned);
 					expect(signedUnsignedB.equals(unsigned)).toBeTrue();
-				}
-				else {
+				} else {
 					expect(signedUnsigned).not.toBeNull();
 				}
 				signedUnchanged();
