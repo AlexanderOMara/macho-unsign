@@ -5,7 +5,6 @@ Package for removing Mach-O code signatures
 [![npm](https://img.shields.io/npm/v/macho-unsign.svg)](https://npmjs.com/package/macho-unsign)
 [![node](https://img.shields.io/node/v/macho-unsign.svg)](https://nodejs.org)
 
-[![dependencies](https://img.shields.io/david/AlexanderOMara/macho-unsign.svg)](https://david-dm.org/AlexanderOMara/macho-unsign)
 [![size](https://packagephobia.now.sh/badge?p=macho-unsign)](https://packagephobia.now.sh/result?p=macho-unsign)
 [![downloads](https://img.shields.io/npm/dm/macho-unsign.svg)](https://npmcharts.com/compare/macho-unsign?minimal=true)
 
