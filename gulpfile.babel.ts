@@ -30,7 +30,7 @@ async function exec(cmd: string, args: string[] = []) {
 	}
 }
 
-async function packageJSON() {
+async function packageJson() {
 	return JSON.parse(await readFile('package.json', 'utf8')) as {
 		[p: string]: string;
 	};
@@ -76,7 +76,7 @@ async function babelTarget(
 	}
 
 	// Read the package JSON.
-	const pkg = await packageJSON();
+	const pkg = await packageJson();
 
 	// Filter meta data file and create replace transform.
 	const filterMeta = gulpFilter(['*/meta.ts'], {restore: true});
