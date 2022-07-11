@@ -141,14 +141,14 @@ gulp.task('build:cjs', async () => {
 	await babelTarget(['src/**/*.ts'], 'lib', 'commonjs');
 });
 
-gulp.task('build:mjs', async () => {
+gulp.task('build:esm', async () => {
 	await babelTarget(['src/**/*.ts'], 'lib', false);
 });
 
 gulp.task('build', gulp.parallel([
 	'build:dts',
 	'build:cjs',
-	'build:mjs'
+	'build:esm'
 ]));
 
 // test
@@ -173,7 +173,37 @@ gulp.task('watch', () => {
 	]));
 });
 
+gulp.task('watch:cjs', () => {
+	gulp.watch([
+		'src/**/*'
+	], gulp.series([
+		'all:cjs'
+	]));
+});
+
+gulp.task('watch:esm', () => {
+	gulp.watch([
+		'src/**/*'
+	], gulp.series([
+		'all:esm'
+	]));
+});
+
 // all
+
+gulp.task('all:cjs', gulp.series([
+	'clean',
+	'build:cjs',
+	'test:cjs',
+	'lint'
+]));
+
+gulp.task('all:esm', gulp.series([
+	'clean',
+	'build:esm',
+	'test:esm',
+	'lint'
+]));
 
 gulp.task('all', gulp.series([
 	'clean',
