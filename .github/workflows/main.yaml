@@ -26,7 +26,6 @@ jobs:
             NO_LINT: 1
 
           - node-version: '16.16.0' # LTS (current)
-            NO_LINT: 1
 
           - node-version: '18.5.0'
 
