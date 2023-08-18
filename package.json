@@ -1,7 +1,7 @@
 {
 	"name": "macho-unsign",
 	"description": "Package for removing Mach-O code signatures",
-	"version": "1.1.1",
+	"version": "2.0.0",
 	"keywords": [
 		"mach-o",
 		"macho",
