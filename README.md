@@ -27,13 +27,13 @@ If the binary is signed, an unsigned binary in a new `ArrayBuffer` will be retur
 If the binary has no signatures, `null` will be returned.
 
 ```js
-import fs from 'fs';
+import {readFile, writeFile} from 'node:fs/promises';
 import {unsign} from 'macho-unsign';
 
-const unsigned = unsign(fs.readFileSync('macho-binary'));
+const unsigned = unsign(await readFile('macho-binary'));
 if (unsigned) {
 	console.log('Signature Removed', unsigned);
-	fs.writeFileSync('macho-binary-unsigned', Buffer.from(unsigned));
+	await writeFile('macho-binary-unsigned', Buffer.from(unsigned));
 } else {
 	console.log('Not signed');
 }
@@ -45,7 +45,7 @@ If you find a bug or have compatibility issues, please open a ticket under issue
 
 # License
 
-Copyright (c) 2019-2022 Alexander O'Mara
+Copyright (c) 2019-2023 Alexander O'Mara
 
 Licensed under the Mozilla Public License, v. 2.0.
 

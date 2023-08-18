@@ -1,8 +1,7 @@
-import {readFile} from 'fs';
-import {promisify} from 'util';
-import {createHash} from 'crypto';
-
-const readFileP = promisify(readFile);
+import {describe, it} from 'node:test';
+import {strictEqual, notStrictEqual} from 'node:assert';
+import {readFile} from 'node:fs/promises';
+import {createHash} from 'node:crypto';
 
 import {unsign} from './unsign';
 
@@ -21,7 +20,7 @@ function* genSamples() {
 }
 
 async function readSample(name: string, type: string) {
-	return readFileP(`spec/fixtures/macho/build/${name}.${type}`);
+	return readFile(`spec/fixtures/macho/build/${name}.${type}`);
 }
 
 async function readSampleNotsigned(name: string) {
@@ -50,11 +49,10 @@ function ensureUnchanged(data: Buffer) {
 	};
 }
 
-describe('unsign', () => {
-	describe('unsign', () => {
+void describe('unsign', () => {
+	void describe('unsign', () => {
 		for (const sample of genSamples()) {
-			// eslint-disable-next-line no-loop-func
-			it(sample, async () => {
+			void it(sample, async () => {
 				const signed = await readSampleSigned(sample);
 				const notsigned = await readSampleNotsigned(sample);
 				const unsigned = await readSampleUnsigned(sample);
@@ -63,15 +61,15 @@ describe('unsign', () => {
 				const signedUnsigned = unsign(signed);
 				if (signedUnsigned) {
 					const signedUnsignedB = Buffer.from(signedUnsigned);
-					expect(signedUnsignedB.equals(unsigned)).toBeTrue();
+					strictEqual(signedUnsignedB.equals(unsigned), true);
 				} else {
-					expect(signedUnsigned).not.toBeNull();
+					notStrictEqual(signedUnsigned, null);
 				}
 				signedUnchanged();
 
 				const notsignedUnchanged = ensureUnchanged(notsigned);
 				const notsignedUnsigned = unsign(notsigned);
-				expect(notsignedUnsigned).toBeNull();
+				strictEqual(notsignedUnsigned, null);
 				notsignedUnchanged();
 			});
 		}
