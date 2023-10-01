@@ -1,7 +1,6 @@
 export type ArrayBuffers = ArrayBuffer | SharedArrayBuffer;
 
 export interface IArrayBufferView {
-	//
 	/**
 	 * The expected buffer property.
 	 */
