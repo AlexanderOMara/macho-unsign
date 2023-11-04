@@ -8,7 +8,7 @@ Package for removing Mach-O code signatures
 [![size](https://packagephobia.now.sh/badge?p=macho-unsign)](https://packagephobia.now.sh/result?p=macho-unsign)
 [![downloads](https://img.shields.io/npm/dm/macho-unsign.svg)](https://npmcharts.com/compare/macho-unsign?minimal=true)
 
-[![Build Status](https://github.com/AlexanderOMara/macho-unsign/workflows/main/badge.svg?branch=master)](https://github.com/AlexanderOMara/macho-unsign/actions?query=workflow%3Amain+branch%3Amaster)
+[![Build Status](https://github.com/AlexanderOMara/macho-unsign/workflows/main/badge.svg)](https://github.com/AlexanderOMara/macho-unsign/actions?query=workflow%3Amain+branch%3Amaster)
 
 # Overview
 
