@@ -12,17 +12,14 @@ jobs:
           - node-version: '18.12.0' # LTS
             CODE_TEST: 'test-legacy'
 
-          - node-version: '18.18.2' # LTS
-            CODE_TEST: 'test-legacy'
-
           - node-version: '20.9.0' # LTS
             CODE_TEST: 'test-legacy'
 
-          - node-version: '20.11.1' # LTS (current)
+          - node-version: '20.12.2' # LTS (current)
             CODE_TEST: 'test-legacy'
             CODE_CHECK: 1
 
-          - node-version: '21.6.2' # Latest
+          - node-version: '21.7.3' # Latest
             CODE_TEST: 'test'
 
     runs-on: ubuntu-latest
@@ -69,7 +66,7 @@ jobs:
       - name: Node
         uses: actions/setup-node@v4
         with:
-          node-version: '20.11.1'
+          node-version: '20.12.2'
           registry-url: https://registry.npmjs.org/
 
       - name: Dependencies
