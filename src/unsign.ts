@@ -63,6 +63,7 @@ function dataViewAscii(dv: Readonly<DataView>, offset: number, size: number) {
 		if (!v) {
 			return str;
 		}
+		// eslint-disable-next-line unicorn/prefer-code-point
 		str += String.fromCharCode(v);
 	}
 	throw new Error('String did not end within range');
