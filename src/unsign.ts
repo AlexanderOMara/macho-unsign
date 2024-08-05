@@ -1,4 +1,4 @@
-import {ArrayBuffers, IArrayBufferView} from './types';
+import {ArrayBuffers, IArrayBufferView} from './types.ts';
 
 const LC_SEGMENT = 0x01;
 const LC_SEGMENT_64 = 0x19;

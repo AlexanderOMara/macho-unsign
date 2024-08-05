@@ -3,7 +3,7 @@ import {strictEqual, notStrictEqual} from 'node:assert';
 import {readFile} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 
-import {unsign} from './unsign';
+import {unsign} from './unsign.ts';
 
 const samples = ['main'];
 
