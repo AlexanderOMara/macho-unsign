@@ -221,10 +221,18 @@ export default [
 			// ],
 
 			// Unicorn plugin:
+			'unicorn/catch-error-name': 'off',
+			'unicorn/explicit-length-check': 'off',
+			'unicorn/import-style': 'off',
 			'unicorn/no-anonymous-default-export': 'off',
+			'unicorn/no-array-callback-reference': 'off',
 			'unicorn/no-await-expression-member': 'off',
+			'unicorn/no-hex-escape': 'off',
 			'unicorn/no-null': 'off',
+			'unicorn/no-unreadable-array-destructuring': 'off',
 			'unicorn/numeric-separators-style': 'off',
+			'unicorn/prefer-string-replace-all': 'off',
+			'unicorn/prefer-top-level-await': 'off',
 			'unicorn/prevent-abbreviations': 'off',
 			'unicorn/switch-case-braces': 'off',
 
